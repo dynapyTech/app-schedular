@@ -2,6 +2,10 @@ import streamlit as st
 import gspread
 import re
 from oauth2client.service_account import ServiceAccountCredentials
+st.set_page_config(
+    page_title="Dynapy",
+    page_icon=":large_purple_circle:"
+)
 
 # Set up service account credentials
 scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
@@ -13,7 +17,7 @@ client = gspread.authorize(creds)
 # Open the Google Sheet
 sheet = client.open('Appointment_Schedular').worksheet('Schedule')
 
-# st.logo('assets/dynapy_logo.jpg')
+# st.image('assets/dynapy_logo.jpg')
 
 st.header("Appointment Form")
 # Create a Streamlit form
@@ -36,9 +40,13 @@ with st.form("contest_entry_form"):
         age = st.text_input("Age*")
         pain_index = st.slider("Rate your pain*", 1,5)
         appointment_time = str(st.time_input("Appointment Time*", value="now"))
-    
+
     colsulted_doctor = st.selectbox("Ever Consulted a Doctor Before?*", options=["Yes", "No"])
-    submit_button = st.form_submit_button("Submit")
+
+    col11, col12, col13 = st.columns(3)
+
+    with col12:
+        submit_button = st.form_submit_button("Submit", use_container_width=True)
 
     # Function to validate email format
     def is_valid_email(email):
