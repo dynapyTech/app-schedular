@@ -6,13 +6,24 @@ st.set_page_config(
     page_title="Dynapy",
     page_icon=":large_purple_circle:"
 )
-
+google_secrets = st.secrets.get("secrets", {})
 # Set up service account credentials
 scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
-creds = ServiceAccountCredentials.from_json_keyfile_name('dynapy_schedular.json', scope)
+credentials = ServiceAccountCredentials.from_json_keyfile_dict({
+    "type": google_secrets["type"],
+    "project_id": google_secrets["project_id"],
+    "private_key_id": google_secrets["private_key_id"],
+    "private_key": google_secrets["private_key"].replace('\\n', '\n'),
+    "client_email": google_secrets["client_email"],
+    "client_id": google_secrets["client_id"],
+    "auth_uri": google_secrets["auth_uri"],
+    "token_uri": google_secrets["token_uri"],
+    "auth_provider_x509_cert_url": google_secrets["auth_provider_x509_cert_url"],
+    "client_x509_cert_url": google_secrets["client_x509_cert_url"]
+}, scope)
 
 # Create a client instance
-client = gspread.authorize(creds)
+client = gspread.authorize(credentials)
 
 # Open the Google Sheet
 sheet = client.open('Appointment_Schedular').worksheet('Schedule')
